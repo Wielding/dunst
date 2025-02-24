@@ -7,11 +7,24 @@
 #
 # It should be set in the dunstrc config file as the dmenu command.
 # dmenu = <path_to_script>/dunst_center.sh
+#
+# In order to invoke this script, you can use the dunstctl command:
+#
+# dunstctl context
+#
+# which you can map to a hotkey in your window manager. e.g. in sway
+#
+# bindsym $mod+Shift+n exec dunstctl context
+#
+# This script requires the following packages:
+# - fuzzel
+# - jq
+# - busctl
+#
 #################################################################################
 
 declare -A entries
 declare -A reverse_entries
-declare -A apps
 
 notifications=$(busctl -j --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.dunstproject.cmd0 -- NotificationListShowing | jq -r '(.data)[][] | "\(.id.data)|\(."summary".data)|\(."appname".data)|\(."body".data)" | gsub("[\\n\\t]"; "")')
 
@@ -27,14 +40,8 @@ while IFS=$'\n' read -r line; do
     done
     display="${items[2]} - ${items[1]}"
 
-    # if Thunderbird use body as display
-    if [[ ${items[2]} == "Thunderbird" ]]; then
-        display="${items[3]}"
-    fi
-
     entries["${items[0]}"]="$display"
     reverse_entries["$display"]="${items[0]}"
-    apps["${items[0]}"]="${items[2]}"
 done <<<"$notifications"
 
 if [ ${#entries[@]} -eq 0 ]; then
