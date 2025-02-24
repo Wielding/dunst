@@ -1,5 +1,16 @@
 [![main](https://github.com/dunst-project/dunst/workflows/main/badge.svg)](https://github.com/dunst-project/dunst/actions?query=workflow%3Amain) [![codecov](https://codecov.io/gh/dunst-project/dunst/branch/master/graph/badge.svg)](https://codecov.io/gh/dunst-project/dunst)
 
+# This is a fork of the original dunst project.
+
+It implements a new dbus method "NotificationListShowing" that returns a list of the currently displayed notifications to assist in handling notifications from scripts.
+
+You can retrieve the list in json format of currently displayed notifications with the following command:
+
+```
+busctl -j --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.dunstproject.cmd0 --
+NotificationListShowing
+```
+
 # Dunst
 
 <i>A highly configurable and lightweight notification daemon.</i>
@@ -115,11 +126,15 @@ sudo make install
 - `PREFIX=<PATH>`: Set the prefix of the installation. (Default: `/usr/local`)
 - `BINDIR=<PATH>`: Set the `dunst` executable's path (Default: `${PREFIX}/bin`)
 - `DATADIR=<PATH>`: Set the path for shared files. (Default: `${PREFIX}/share`)
-- `BASHCOMPLETIONDIR=<PATH>`: Set the path for installation of bash completion files. (Default: `${DATADIR}/bash-completion/completions`)
-- `FISHCOMPLETIONDIR=<PATH>`: Set the path for installation of fish completion files. (Default: `${DATADIR}/fish/vendor_completions.d`)
-- `ZSHCOMPLETIONDIR=<PATH>`: Set the path for installation of zsh completion files. (Default: `${DATADIR}/zsh/site-functions`)
+- `BASHCOMPLETIONDIR=<PATH>`: Set the path for installation of bash completion files. (Default:
+  `${DATADIR}/bash-completion/completions`)
+- `FISHCOMPLETIONDIR=<PATH>`: Set the path for installation of fish completion files. (Default:
+  `${DATADIR}/fish/vendor_completions.d`)
+- `ZSHCOMPLETIONDIR=<PATH>`: Set the path for installation of zsh completion files. (Default:
+  `${DATADIR}/zsh/site-functions`)
 - `SYSCONFDIR=<PATH>`: Set the base directory for system config files. (Default: `${PREFIX}/etc/xdg`)
-- `SYSCONFFILE=<PATH>`: Set the absolute path to which the default dunstrc shall be installed. (Default: `${SYSCONFDIR}/dunst/dunstrc`)
+- `SYSCONFFILE=<PATH>`: Set the absolute path to which the default dunstrc shall be installed. (Default:
+  `${SYSCONFDIR}/dunst/dunstrc`)
 - `SYSCONF_FORCE_NEW=(0|1)`: Overwrite existing `${SYSCONFFILE}`. (Default: 0 (don't overwrite))
 - `MANDIR=<PATH>`: Set the prefix of the manpage. (Default: `${DATADIR}/man`)
 - `SYSTEMD=(0|1)`: Disable/Enable the systemd unit. (Default: autodetect systemd)
@@ -127,11 +142,13 @@ sudo make install
 - `X11=(0|1)`: Disable/Enable X11 support. (Default: 1 (enabled))
 - `DUNSTIFY=(0|1)`: Disable/Enable the libnotify dunstctl utility. (Default: 1 (enabled))
 - `COMPLETIONS=(0|1)`: Disable/Enable installation of shell completions. (Default: 1 (enabled))
-- `SERVICEDIR_SYSTEMD=<PATH>`: The path to put the systemd user service file. Unused, if `SYSTEMD=0`. (Default: `${PREFIX}/lib/systemd/user`)
+- `SERVICEDIR_SYSTEMD=<PATH>`: The path to put the systemd user service file. Unused, if `SYSTEMD=0`. (Default:
+  `${PREFIX}/lib/systemd/user`)
 - `SERVICEDIR_DBUS=<PATH>`: The path to put the dbus service file. (Default: `${DATADIR}/dbus-1/services`)
 - `EXTRA_CFLAGS=<FLAGS>`: Additional flags for the compiler.
 
-**Make sure to run all make calls with the same parameter set. So when building with `make PREFIX=/usr`, you have to install it with `make PREFIX=/usr install`, too.**
+**Make sure to run all make calls with the same parameter set. So when building with `make PREFIX=/usr`, you have to
+install it with `make PREFIX=/usr install`, too.**
 
 **Either X11 or WAYLAND should be set, otherwise dunst will not compile.**
 
@@ -212,6 +229,9 @@ Written by Sascha Kruse <dunst@knopwob.de>
 Copyright 2013 Sascha Kruse and contributors (see [`LICENSE`](./LICENSE) for licensing information)
 
 [issue-tracker]: https://github.com/dunst-project/dunst/issues
+
 [wiki]: https://github.com/dunst-project/dunst/wiki
+
 [website]: https://dunst-project.org
+
 [FAQ]: https://dunst-project.org/faq
