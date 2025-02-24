@@ -83,6 +83,12 @@ GList *queues_get_history(void)
         return g_queue_peek_head_link(history);
 }
 
+GList *queues_get_waiting(void)
+{
+  return g_queue_peek_head_link(waiting);
+}
+
+
 /**
  * Swap two given queue elements. The element's data has to be a notification.
  *

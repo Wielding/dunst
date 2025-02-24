@@ -33,6 +33,8 @@ GList *queues_get_displayed(void);
  */
 GList *queues_get_history(void);
 
+GList *queues_get_waiting(void);
+
 /**
  * Get the highest notification in line
  *
@@ -40,6 +42,7 @@ GList *queues_get_history(void);
  * @retval NULL: waiting is empty
  */
 struct notification *queues_get_head_waiting(void);
+
 
 /**
  * Returns the current amount of notifications,
