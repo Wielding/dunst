@@ -2,7 +2,8 @@
 
 # This is a fork of the original dunst project.
 
-It implements a new dbus method "NotificationListShowing" that returns a list of the currently displayed notifications to assist in handling notifications from scripts.
+It implements a new dbus method "NotificationListShowing" that returns a list of the currently displayed notifications
+to assist in handling notifications from scripts.
 
 You can retrieve the list in json format of currently displayed notifications with the following command:
 
@@ -10,6 +11,9 @@ You can retrieve the list in json format of currently displayed notifications wi
 busctl -j --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.dunstproject.cmd0 --
 NotificationListShowing
 ```
+
+It also contains a new script in contrib called dunst_center.sh which allows keyboard selection of notification and
+notification actions. Primarily for use with the sway window manager but should work in other environments.
 
 # Dunst
 
