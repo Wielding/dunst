@@ -15,6 +15,24 @@ NotificationListShowing
 It also contains a new script in contrib called dunst_center.sh which allows keyboard selection of notification and
 notification actions. Primarily for use with the sway window manager but should work in other environments.
 
+
+For use in sway, bind dunstctl context in your sway config file:
+
+```
+bindsym $mod+Alt+n exec --no-startup-id "dunstctl context"
+```
+
+And then, add the dunst_center.sh script to your dunstrc file:
+
+```
+dmenu = <path to script>/dunst_center.sh
+```
+
+Now when you hit the keybinding, you can select a notification using fuzzel and then be prompted again in fuzzel to
+select an action for that notification.
+
+
+
 # Dunst
 
 <i>A highly configurable and lightweight notification daemon.</i>
