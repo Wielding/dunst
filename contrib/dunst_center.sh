@@ -26,7 +26,7 @@
 declare -A entries
 declare -A reverse_entries
 
-notifications=$(busctl -j --user call org.freedesktop.Notifications /org/freedesktop/Notifications org.dunstproject.cmd0 -- NotificationListShowing | jq -r '(.data)[][] | "\(.id.data)|\(."summary".data)|\(."appname".data)|\(."body".data)" | gsub("[\\n\\t]"; "")')
+notifications=$(dunstctl list | jq -r '(.data)[][] | "\(.id.data)|\(."summary".data)|\(."appname".data)|\(."body".data)" | gsub("[\\n\\t]"; "")')
 
 if [ -z "$notifications" ]; then
     exit

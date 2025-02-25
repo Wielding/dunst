@@ -31,6 +31,8 @@ show_help() {
 	  count [displayed|history|waiting] Show the number of notifications
 	  history                           Display notification history (in JSON)
 	  history-clear                     Delete all notifications from history
+	  list                              List all notifications currently
+                                      displayed
 	  history-pop [ID]                  Pop the latest notification from
 	                                    history or optionally the
 	                                    notification with given ID
@@ -233,6 +235,10 @@ case "${1:-}" in
 		busctl_checked NotificationListHistory \
 			|| die "Dunst is not running or unreachable."
 		;;
+  "list")
+    busctl_checked NotificationListShowing \
+      || die "Dunst is not running or unreachable."
+      ;;
 	"reload")
 		shift
 		method_call "${DBUS_IFAC_DUNST}.ConfigReload" "array:string:$(IFS=','; echo "$*")" >/dev/null
