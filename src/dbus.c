@@ -78,7 +78,7 @@ static const char *introspection_xml =
     "    </interface>"
     "    <interface name=\"" DUNST_IFAC "\">"
 
-    "        <method name=\"ContextMenuCall\"       />"
+    "        <method name=\"ContextMenuCall\"/>"
     "        <method name=\"NotificationAction\">"
     "            <arg name=\"number\"     type=\"u\"/>"
     "        </method>"
@@ -100,7 +100,7 @@ static const char *introspection_xml =
     "        <method name=\"NotificationRemoveFromHistory\">"
     "            <arg direction=\"in\"  name=\"id\"              type=\"u\"/>"
     "        </method>"
-    "        <method name=\"NotificationShow\"      />"
+    "        <method name=\"NotificationShow\"/>"
     "        <method name=\"RuleEnable\">"
     "            <arg name=\"name\"     type=\"s\"/>"
     "            <arg name=\"state\"    type=\"i\"/>"
@@ -112,7 +112,7 @@ static const char *introspection_xml =
     "        <method name=\"ConfigReload\">"
     "            <arg direction=\"in\" name=\"configs\"  type=\"as\"/>"
     "        </method>"
-    "        <method name=\"Ping\"                  />"
+    "        <method name=\"Ping\"/>"
 
     "        <property name=\"paused\" type=\"b\" access=\"readwrite\">"
     "            <annotation "
@@ -127,6 +127,18 @@ static const char *introspection_xml =
     "        <property name=\"displayedLength\" type=\"u\" access=\"read\" />"
     "        <property name=\"historyLength\" type=\"u\" access=\"read\" />"
     "        <property name=\"waitingLength\" type=\"u\" access=\"read\" />"
+
+    "        <signal name=\"NotificationHistoryRemoved\">"
+    "            <arg name=\"id\"         type=\"u\"/>"
+    "        </signal>"
+
+    "        <signal name=\"NotificationHistoryCleared\">"
+    "            <arg name=\"count\"      type=\"u\"/>"
+    "        </signal>"
+
+    "        <signal name=\"ConfigReloaded\">"
+    "            <arg name=\"configs\"    type=\"as\"/>"
+    "        </signal>"
 
     "    </interface>"
     "</node>";
