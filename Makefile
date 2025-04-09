@@ -3,9 +3,9 @@
 
 include config.mk
 
-VERSION := "1.12.1-non-git"
+VERSION := "1.13.0-non-git"
 ifneq ($(wildcard ./.git/),)
-VERSION := $(shell ${GIT} describe --tags 2>/dev/null || echo ${VERSION})
+VERSION := "$(shell ${GIT} describe --tags 2>/dev/null || echo ${VERSION})"
 endif
 
 SYSTEMD ?= $(shell $(PKG_CONFIG) --silence-errors ${SYSTEMDAEMON} || echo 0)
@@ -82,7 +82,7 @@ else
 endif
 src/dunst.o: src/dunst.c
 	${CC} -o $@ -c $< ${CPPFLAGS} ${CFLAGS} \
-		-D_CCDATE="${BUILD_DATE}" -D_CFLAGS="$(filter-out $(filter -I%,${INCS}),${CFLAGS})" -D_LDFLAGS="${LDFLAGS}"
+		-D_CCDATE="${BUILD_DATE}" -D_CFLAGS="$(filter-out $(filter -I%,${INCS}) -fdebug-prefix-map% -fmacro-prefix-map% -ffile-prefix-map%,${CFLAGS})" -D_LDFLAGS="$(filter-out -fdebug-prefix-map% -fmacro-prefix-map% -ffile-prefix-map%,${LDFLAGS})"
 
 %.o: %.c
 	${CC} -o $@ -c $< ${CPPFLAGS} ${CFLAGS}
@@ -138,8 +138,10 @@ doc: docs/dunst.1 docs/dunst.5 docs/dunstctl.1 docs/dunstify.1
 
 # Can't dedup this as we need to explicitly provide the name and title text to
 # pod2man :(
+docs/dunst.1.pod: docs/dunst.1.pod.in
+	${SED} "s|@sysconfdir@|${SYSCONFDIR}|" $< > $@
 docs/dunst.1: docs/dunst.1.pod
-	${SED} "s|##SYSCONFDIR##|${SYSCONFDIR}|" $< | ${POD2MAN} --name=dunst -c "Dunst Reference" --section=1 --release=${VERSION} > $@
+	${POD2MAN} --name=dunst -c "Dunst Reference" --section=1 --release=${VERSION} $< > $@
 docs/dunst.5: docs/dunst.5.pod
 	${POD2MAN} --name=dunst -c "Dunst Reference" --section=5 --release=${VERSION} $< > $@
 docs/dunstctl.1: docs/dunstctl.pod
@@ -153,11 +155,11 @@ doc-doxygen:
 .PHONY: service service-dbus service-systemd wayland-protocols
 service: service-dbus
 service-dbus:
-	@${SED} "s|##PREFIX##|$(PREFIX)|" org.knopwob.dunst.service.in > org.knopwob.dunst.service
+	@${SED} "s|@bindir@|$(BINDIR)|" org.knopwob.dunst.service.in > org.knopwob.dunst.service
 ifneq (0,${SYSTEMD})
 service: service-systemd
 service-systemd:
-	@${SED} "s|##PREFIX##|$(PREFIX)|" dunst.systemd.service.in > dunst.systemd.service
+	@${SED} "s|@bindir@|$(BINDIR)|" dunst.systemd.service.in > dunst.systemd.service
 endif
 
 ifneq (0,${WAYLAND})

@@ -871,12 +871,15 @@ static struct notification *dbus_message_to_notification(const gchar *sender,
     g_variant_unref(dict_value);
   }
 
-  if ((dict_value = g_variant_lookup_value(hints, "image-path",
-                                           G_VARIANT_TYPE_STRING))) {
-    g_free(n->iconname);
-    n->iconname = g_variant_dup_string(dict_value, NULL);
-    g_variant_unref(dict_value);
-  }
+        dict_value = g_variant_lookup_value(hints, "image-path", G_VARIANT_TYPE_STRING);
+        if (!dict_value)
+                dict_value = g_variant_lookup_value(hints, "image_path", G_VARIANT_TYPE_STRING);
+
+        if (dict_value) {
+                g_free(n->iconname);
+                n->iconname = g_variant_dup_string(dict_value, NULL);
+                g_variant_unref(dict_value);
+        }
 
   // Set raw icon data only after initializing the notification, so the
   // desired icon size is known. This way the buffer can be immediately
@@ -1134,8 +1137,13 @@ void signal_notification_closed(struct notification *n, enum reason reason) {
   GVariant *body = g_variant_new("(uu)", n->id, reason);
   GError *err = NULL;
 
-  g_dbus_connection_emit_signal(dbus_conn, n->dbus_client, FDN_PATH, FDN_IFAC,
-                                "NotificationClosed", body, &err);
+        g_dbus_connection_emit_signal(dbus_conn,
+                                      n->dbus_client,
+                                      FDN_PATH,
+                                      FDN_IFAC,
+                                      "NotificationClosed",
+                                      body,
+                                      &err);
 
   notification_invalidate_actions(n);
 
