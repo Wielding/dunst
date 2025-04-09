@@ -54,7 +54,7 @@ for key in "${!entries[@]}"; do
     fuzzel_input+="${entries[$key]}\n"
 done
 
-fuzzel_output=$(echo -e -n "$fuzzel_input" | fuzzel --output DP-2 -p "select notification:" -d)
+fuzzel_output=$(echo -e -n "$fuzzel_input" | fuzzel --output HDMI-A-3 -p "select notification:" -d)
 
 if [ -z "$fuzzel_output" ]; then
     exit
@@ -86,7 +86,7 @@ for line in "${notification_lines[@]}"; do
     fi
 done
 
-fuzzel_output=$(echo -e -n "$fuzzel_choices" | fuzzel --output DP-2 -p "select action:" -d)
+fuzzel_output=$(echo -e -n "$fuzzel_choices" | fuzzel --output HDMI-A-3 -p "select action:" -d)
 
 if [ -z "$fuzzel_output" ]; then
     exit
