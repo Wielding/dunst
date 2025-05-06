@@ -145,6 +145,16 @@ struct ini *load_ini_file(FILE *fp)
                         continue;
                 }
 
+//                if (strcmp(key, "mouse_right_click") == 0) {
+//                    int dbreak = 1;
+//                    char *breaks = strchr(value, ' ');
+//
+//                    if (breaks) {
+//                        *breaks = '\0';
+//                        dbreak = 0;
+//                    }
+//                }
+
                 add_entry(ini, current_section, key, value);
         }
         free(line);

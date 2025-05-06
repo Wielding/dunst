@@ -312,6 +312,7 @@ static const struct string_to_enum_def mouse_action_enum_data[] = {
         {"context",        MOUSE_CONTEXT },
         {"context_all",    MOUSE_CONTEXT_ALL },
         {"open_url",       MOUSE_OPEN_URL },
+        {"send_ignore", MOUSE_SEND_IGNORE},
         ENUM_END,
 };
 
