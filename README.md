@@ -1,9 +1,5 @@
 [![main](https://github.com/dunst-project/dunst/workflows/main/badge.svg)](https://github.com/dunst-project/dunst/actions?query=workflow%3Amain) [![codecov](https://codecov.io/gh/dunst-project/dunst/branch/master/graph/badge.svg)](https://codecov.io/gh/dunst-project/dunst)
 
-# This repository is being archived.  I am no longer maintaining or pulling changes from the official dunst repository.
-
-### This is mainly due to the fact that swaywm 1.11 seems to have an issue that causes mako and dunst to fail showing notifications after a monitor is powered off/on.  I have read that it is fixed in newer releases of sway that I can't build and install on my machine without causing compatibility issues with other desktops.  I am not willing to deal with some workarounds that do not work 100% of the time anyway so I am no longer using mako or dunst.
-
 
 # This is a fork of the original dunst project.
 
