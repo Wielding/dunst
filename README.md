@@ -3,6 +3,9 @@
 
 # This is a fork of the original dunst project.
 
+I am not expecting to create a pull request to the main dunst project since I am adding customizations that are not needed
+by other users at this point.
+
 It implements a new dbus method "NotificationListShowing" that returns a list of the currently displayed notifications
 to assist in handling notifications from scripts.
 
@@ -32,6 +35,8 @@ dmenu = <path to script>/dunst_center.sh
 Now when you hit the keybinding, you can select a notification using fuzzel and then be prompted again in fuzzel to
 select an action for that notification.
 
+I have also added a new mouse option "send_ignore" which sends back "IGNORE" to the notification source 
+for use by one of my notification bridges.
 
 
 # Dunst
