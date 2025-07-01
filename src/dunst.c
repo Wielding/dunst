@@ -302,6 +302,7 @@ int dunst_main(int argc, char *argv[])
         guint term_src = g_unix_signal_add(SIGTERM, quit_signal, NULL);
         guint int_src = g_unix_signal_add(SIGINT, quit_signal, NULL);
 
+
         if (startup_notification) {
                 struct notification *n = notification_create();
                 n->id = 0;
@@ -319,6 +320,11 @@ int dunst_main(int argc, char *argv[])
 
         setup_done = true;
         run(GINT_TO_POINTER(DUNST_TIMER)); // The first run() is a scheduled one
+
+
+        // Set default_pause_level only after showing the startup notification
+        dunst_status_int(S_PAUSE_LEVEL, settings.default_pause_level);
+
         g_main_loop_run(mainloop);
         g_clear_pointer(&mainloop, g_main_loop_unref);
 
@@ -348,14 +354,20 @@ void usage(int exit_status)
 void print_version(void)
 {
         printf("Dunst - A customizable and lightweight notification-daemon %s\n", VERSION);
+#ifdef _CCDATE
         printf("Compiled on %s with the following options:\n", STR_TO(_CCDATE));
+#endif
 
         printf("X11 support: %s\n", X11_SUPPORT ? "enabled" : "disabled");
         printf("Wayland support: %s\n", WAYLAND_SUPPORT ? "enabled" : "disabled");
         printf("SYSCONFDIR set to: %s\n", SYSCONFDIR);
 
+#ifdef _CFLAGS
         printf("Compiler flags: %s\n", STR_TO(_CFLAGS));
+#endif
+#ifdef _LDFLAGS
         printf("Linker flags: %s\n", STR_TO(_LDFLAGS));
+#endif
         exit(EXIT_SUCCESS);
 }
 
