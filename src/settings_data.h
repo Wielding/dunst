@@ -313,6 +313,7 @@ static const struct string_to_enum_def mouse_action_enum_data[] = {
         {"context_all",    MOUSE_CONTEXT_ALL },
         {"open_url",       MOUSE_OPEN_URL },
         {"send_ignore", MOUSE_SEND_IGNORE},
+        {"remove_current", MOUSE_REMOVE_CURRENT },
         ENUM_END,
 };
 
@@ -1307,7 +1308,7 @@ static const struct setting allowed_settings[] = {
                 .section = "global",
                 .description = "Action of middle click event",
                 .type = TYPE_LIST,
-                .default_value = "do_action, close_current",
+                .default_value = "do_action, remove_current",
                 .value = &settings.mouse_middle_click,
                 .parser = NULL,
                 .parser_data = GINT_TO_POINTER(MOUSE_LIST),

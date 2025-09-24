@@ -120,13 +120,20 @@ static const char *introspection_xml =
     "        </property>"
 
     "        <property name=\"pauseLevel\" type=\"u\" access=\"readwrite\">"
-    "            <annotation "
-    "name=\"org.freedesktop.DBus.Property.EmitsChangedSignal\" value=\"true\"/>"
+    "            <annotation name=\"org.freedesktop.DBus.Property.EmitsChangedSignal\" value=\"true\"/>"
     "        </property>"
 
-    "        <property name=\"displayedLength\" type=\"u\" access=\"read\" />"
-    "        <property name=\"historyLength\" type=\"u\" access=\"read\" />"
-    "        <property name=\"waitingLength\" type=\"u\" access=\"read\" />"
+    "        <property name=\"displayedLength\" type=\"u\" access=\"read\">"
+    "            <annotation name=\"org.freedesktop.DBus.Property.EmitsChangedSignal\" value=\"true\"/>"
+    "        </property>"
+    "        <property name=\"historyLength\" type=\"u\" access=\"read\">"
+    "            <annotation name=\"org.freedesktop.DBus.Property.EmitsChangedSignal\" value=\"true\"/>"
+    "        </property>"
+
+    "        <property name=\"waitingLength\" type=\"u\" access=\"read\">"
+    "            <annotation name=\"org.freedesktop.DBus.Property.EmitsChangedSignal\" value=\"true\"/>"
+    "        </property>"
+
 
     "        <signal name=\"NotificationHistoryRemoved\">"
     "            <arg name=\"id\"         type=\"u\"/>"
@@ -1061,16 +1068,54 @@ void signal_length_propertieschanged(void) {
   g_clear_pointer(&invalidated_builder, g_variant_builder_unref);
 }
 
-static void dbus_cb_Notify(GDBusConnection *connection, const gchar *sender,
-                           GVariant *parameters,
-                           GDBusMethodInvocation *invocation) {
-  struct notification *n = dbus_message_to_notification(sender, parameters);
-  if (!n) {
-    LOG_W("A notification failed to decode.");
-    g_dbus_method_invocation_return_dbus_error(invocation, FDN_IFAC ".Error",
-                                               "Cannot decode notification!");
-    return;
-  }
+void signal_paused_propertieschanged(void)
+{
+        if(!dbus_conn)
+                return;
+
+        struct dunst_status status = dunst_status_get();
+
+        GVariantBuilder *builder = g_variant_builder_new(G_VARIANT_TYPE_VARDICT);
+        GVariantBuilder *invalidated_builder = g_variant_builder_new(G_VARIANT_TYPE_STRING_ARRAY);
+
+        g_variant_builder_add(builder,
+                              "{sv}",
+                              "paused", g_variant_new_boolean(status.pause_level != 0));
+        g_variant_builder_add(builder,
+                              "{sv}",
+                              "pauseLevel", g_variant_new_uint32(status.pause_level));
+
+        g_dbus_connection_emit_signal(dbus_conn,
+                                      NULL,
+                                      FDN_PATH,
+                                      PROPERTIES_IFAC,
+                                      "PropertiesChanged",
+                                      g_variant_new("(sa{sv}as)",
+                                                    DUNST_IFAC,
+                                                    builder,
+                                                    invalidated_builder),
+                                      NULL);
+
+        g_clear_pointer(&builder, g_variant_builder_unref);
+        g_clear_pointer(&invalidated_builder, g_variant_builder_unref);
+
+}
+
+static void dbus_cb_Notify(
+                GDBusConnection *connection,
+                const gchar *sender,
+                GVariant *parameters,
+                GDBusMethodInvocation *invocation)
+{
+        struct notification *n = dbus_message_to_notification(sender, parameters);
+        if (!n) {
+                LOG_W("A notification failed to decode.");
+                g_dbus_method_invocation_return_dbus_error(
+                                invocation,
+                                FDN_IFAC".Error",
+                                "Cannot decode notification!");
+                return;
+        }
 
   int id = queues_notification_insert(n);
 
@@ -1249,23 +1294,10 @@ gboolean dbus_cb_dunst_Properties_Set(
     dunst_status_int(S_PAUSE_LEVEL, targetPauseLevel);
     wake_up();
 
-    GVariantBuilder *builder = g_variant_builder_new(G_VARIANT_TYPE_VARDICT);
-    GVariantBuilder *invalidated_builder =
-        g_variant_builder_new(G_VARIANT_TYPE_STRING_ARRAY);
-    g_variant_builder_add(builder, "{sv}", "paused",
-                          g_variant_new_boolean(targetPauseLevel != 0));
-    g_variant_builder_add(builder, "{sv}", "pauseLevel",
-                          g_variant_new_uint32(targetPauseLevel));
-    g_dbus_connection_emit_signal(connection, NULL, object_path,
-                                  PROPERTIES_IFAC, "PropertiesChanged",
-                                  g_variant_new("(sa{sv}as)", interface_name,
-                                                builder, invalidated_builder),
-                                  NULL);
+                signal_paused_propertieschanged();
 
-    g_clear_pointer(&builder, g_variant_builder_unref);
-    g_clear_pointer(&invalidated_builder, g_variant_builder_unref);
-    return true;
-  }
+                return true;
+        }
 
   *error = g_error_new(G_DBUS_ERROR, G_DBUS_ERROR_UNKNOWN_PROPERTY,
                        "Unknown property");
