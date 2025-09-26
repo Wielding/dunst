@@ -97,6 +97,15 @@ void input_handle_click(unsigned int button, bool button_down, int mouse_x, int 
                         continue;
                 }
 
+                if (act == MOUSE_SEND_IGNORE) {
+                    struct notification *n = get_notification_at(mouse_y);
+
+                    if (n) {
+                        signal_action_invoked(n, "IGNORE");
+                        n->marked_for_closure = REASON_USER;
+                    }
+                }
+
                 if (act == MOUSE_DO_ACTION || act == MOUSE_CLOSE_CURRENT || act == MOUSE_REMOVE_CURRENT || act == MOUSE_CONTEXT || act == MOUSE_OPEN_URL) {
                         struct notification *n = get_notification_at(mouse_y);
 
